@@ -196,6 +196,11 @@ textarea{min-height:130px;resize:vertical}
 .contact-wrap .lead{font-size:15px;color:#cfc3bf}
 .contact-wrap .lead p+p{margin-top:14px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dm-line{margin-top:22px;font-size:13px;color:var(--muted)}
+.dm-line a{color:var(--text);border-bottom:1px solid var(--red);margin-right:6px}
+.contact-done{border:1px solid var(--line);border-top:3px solid var(--red);padding:34px 28px;text-align:center}
+.contact-done .big{font-family:var(--en);font-size:40px;letter-spacing:.05em;color:var(--red);line-height:1;margin:6px 0 14px}
+.contact-done p{font-size:14px;color:#cfc3bf}
 .dm{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;align-content:flex-start}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .btn:disabled{opacity:.6;cursor:wait}
@@ -311,13 +316,24 @@ footer small{color:var(--muted);font-family:var(--en);letter-spacing:.2em;font-s
   <div class="sec-head reveal"><h2>CONTACT</h2><span>お問い合わせ</span></div>
   <div class="contact-wrap">
     <div class="lead reveal">
-      <p>ライブ出演のご依頼、取材、その他のお問い合わせは、Instagram または X のDMからお気軽にどうぞ。</p>
+      <p>ライブ出演のご依頼、取材、その他のお問い合わせはこちらのフォームからお送りください。</p>
       <p>内容を確認のうえ、メンバーからご連絡します。</p>
+      <p class="dm-line">Instagram / X のDMでもお気軽にどうぞ。<br>
+        <a href="https://www.instagram.com/handle_marie/" target="_blank" rel="noopener">Instagram →</a>　<a href="https://x.com/handle_marie" target="_blank" rel="noopener">X →</a></p>
     </div>
-    <div class="dm reveal">
-      <a class="btn" href="https://www.instagram.com/handle_marie/" target="_blank" rel="noopener">Instagram でDMする →</a>
-      <a class="btn ghost" href="https://x.com/handle_marie" target="_blank" rel="noopener">X でDMする →</a>
-    </div>
+    <form id="contactForm" class="reveal" novalidate>
+      <div class="row2">
+        <div><label>お名前<em>*</em></label><input name="name" autocomplete="name" required></div>
+        <div><label>メールアドレス<em>*</em></label><input name="email" type="email" autocomplete="email" required></div>
+      </div>
+      <label>お問い合わせの種類</label>
+      <select name="kind"><option>ライブ出演のご依頼</option><option>取材・メディア</option><option>その他</option></select>
+      <label>内容<em>*</em></label>
+      <textarea name="body" required></textarea>
+      <div class="hp" aria-hidden="true"><label>website</label><input name="website" tabindex="-1" autocomplete="off"></div>
+      <div class="err" id="cErr"></div>
+      <div class="form-actions"><button class="btn" type="submit">送信する →</button></div>
+    </form>
   </div>
 </section>
 
@@ -436,6 +452,26 @@ async function submitReserve(s, f){
   sheet.querySelector('.close').onclick = closeModal;
   sheet.querySelector('#okBtn').onclick = closeModal;
 }
+
+// ---- お問い合わせ ----
+document.getElementById('contactForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const f=e.target, err=document.getElementById('cErr'), btn=f.querySelector('button[type=submit]');
+  const name=f.name.value.trim(), email=f.email.value.trim(), body=f.body.value.trim();
+  err.textContent='';
+  if(!name||!body){err.textContent='お名前と内容を入力してください。';return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='メールアドレスを確認してください（お返事に使います）。';return}
+  if(!ENDPOINT){err.textContent='※ 試作モードのため送信されません。';return}
+  btn.disabled=true; btn.textContent='送信中…';
+  try{
+    const res=await fetch(ENDPOINT,{method:'POST',body:new URLSearchParams({type:'contact',name,email,kind:f.kind.value,body,website:f.website.value})});
+    const j=await res.json(); if(!j.ok) throw new Error(j.error||'error');
+    f.outerHTML=`<div class="contact-done"><div class="tag">SENT</div><div class="big">THANK YOU!</div><p>${esc(name)} 様、お問い合わせを受け付けました。<br>確認メールを ${esc(email)} に送りました。メンバーからの連絡をお待ちください。</p></div>`;
+  }catch(_){
+    btn.disabled=false; btn.textContent='送信する →';
+    err.innerHTML='うまく送信できませんでした。時間をおいてもう一度試すか、<a href="https://www.instagram.com/handle_marie/" target="_blank" rel="noopener" style="text-decoration:underline">Instagram</a> / <a href="https://x.com/handle_marie" target="_blank" rel="noopener" style="text-decoration:underline">X</a> のDMでご連絡ください。';
+  }
+});
 
 // ---- header / menu / reveal ----
 const hdr=document.getElementById('hdr');
