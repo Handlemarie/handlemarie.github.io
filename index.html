@@ -120,14 +120,20 @@ textarea{min-height:130px;resize:vertical}
 .result p{font-size:14px;color:#cfc3bf}
 .result .demo{margin-top:16px;font-size:11px;color:var(--muted)}
 
-/* photo band */
-.band{padding:0;display:grid;grid-template-columns:1.6fr 1fr;grid-template-rows:1fr 1fr;gap:6px;height:min(80vw,720px)}
-.band figure{overflow:hidden;position:relative}
-.band figure:first-child{grid-row:1/3}
-.band img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s ease,filter .6s}
-.band figure:hover img{transform:scale(1.04)}
-.band img.mono{filter:grayscale(1) contrast(1.1)}
-.band figure:hover img.mono{filter:none}
+/* photo gallery */
+.photo{padding-bottom:110px}
+.gallery{display:grid;grid-template-columns:1.7fr 1fr 1fr;grid-template-rows:repeat(2,minmax(0,1fr));gap:6px;height:min(54vw,680px)}
+.gallery button{all:unset;cursor:zoom-in;position:relative;overflow:hidden;display:block;background:#111}
+.gallery button:first-child{grid-row:1/3}
+.gallery button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.gallery img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s ease,filter .5s;filter:saturate(.9)}
+.gallery button:hover img{transform:scale(1.04);filter:saturate(1.1)}
+.lightbox{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.92);padding:4vw}
+.lightbox.open{display:flex;animation:fade .25s ease}
+.lightbox img{max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.lightbox .lb-close{position:absolute;top:16px;right:20px;background:none;border:0;color:#fff;font-size:34px;cursor:pointer;line-height:1}
+.lightbox .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(10,8,8,.5);border:1px solid #4a3a38;color:#fff;width:48px;height:48px;font-size:22px;cursor:pointer}
+.lightbox .lb-prev{left:16px}.lightbox .lb-next{right:16px}
 
 /* member */
 .member-wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:6vw;align-items:center}
@@ -227,10 +233,9 @@ footer small{color:var(--muted);font-family:var(--en);letter-spacing:.2em;font-s
   .date{display:flex;align-items:baseline;gap:12px}
   .date .md{font-size:40px}
   .side{text-align:left;min-width:0}
-  .band{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;height:auto}
-  .band figure:first-child{grid-column:1/3;grid-row:auto}
-  .band figure{aspect-ratio:4/3}
-  .band figure:first-child{aspect-ratio:3/2}
+  .gallery{grid-template-columns:1fr 1fr;grid-template-rows:auto;height:auto}
+  .gallery button{aspect-ratio:1/1}
+  .gallery button:first-child{grid-column:1/3;grid-row:auto;aspect-ratio:3/2}
   .member-wrap,.music-grid,.contact-wrap{grid-template-columns:minmax(0,1fr)}
   .jacket{max-width:420px}
   .member-photo{max-width:420px}
@@ -270,11 +275,10 @@ footer small{color:var(--muted);font-family:var(--en);letter-spacing:.2em;font-s
   <p class="note reveal">※ 取り置きはこのフォームのほか、Instagram / X のDM（バンド・メンバーどちらでも）でも受け付けています。<br>※ 当日は受付で「ハンドルマリー」とお名前をお伝えください。</p>
 </section>
 
-<div class="band section reveal">
-  <figure><img src="img/drum.jpg" alt="ステージ上のドラム視点のライブ写真"></figure>
-  <figure><img class="mono" src="img/walk.jpg" alt="メンバー3人のオフショット"></figure>
-  <figure><img src="img/stage.jpg" alt="FM GUNMA ROCKERSのステージ写真"></figure>
-</div>
+<section id="photo" class="photo">
+  <div class="sec-head reveal"><h2>PHOTO</h2><span>写真</span></div>
+  <div class="gallery reveal" id="gallery"></div>
+</section>
 
 <section id="member">
   <div class="sec-head reveal"><h2>MEMBER</h2><span>メンバー</span></div>
@@ -344,6 +348,14 @@ footer small{color:var(--muted);font-family:var(--en);letter-spacing:.2em;font-s
   <small>© ハンドルマリー ALL RIGHTS RESERVED.</small>
 </footer>
 
+<!-- photo lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="写真の拡大表示">
+  <button class="lb-close" id="lbClose" aria-label="閉じる">×</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="前の写真">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb-nav lb-next" id="lbNext" aria-label="次の写真">›</button>
+</div>
+
 <!-- reserve modal -->
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
   <div class="sheet" id="sheet"></div>
@@ -352,6 +364,15 @@ footer small{color:var(--muted);font-family:var(--en);letter-spacing:.2em;font-s
 <script>
 // ---- 予約の送信先（Google Apps Script のウェブアプリURL）。空のままだと試作モード ----
 const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxIElwuIacuEuW-g95KdE9pstllY3z6MWA3h3QEnv92kUTRWozKrIla8yx8LuO7d1Lp/exec';
+
+// ---- ギャラリー写真（1枚目が大きく表示されます。ライブごとに入れ替え） ----
+const photos = [
+  {src:'img/drum.jpg',   alt:'ドラム側から見たステージと満員の客席', pos:'50% 50%'},
+  {src:'img/hero.jpg',   alt:'赤い照明の中で手を挙げるギタリストのシルエット', pos:'30% 40%'},
+  {src:'img/stage.jpg',  alt:'FM GUNMA ROCKERSのステージで演奏する3人', pos:'50% 60%'},
+  {src:'img/walk.jpg',   alt:'ダンボールを抱えて歩くメンバー3人', pos:'50% 40%'},
+  {src:'img/studio.jpg', alt:'スタジオで音を合わせるメンバー', pos:'50% 40%'},
+];
 
 // ---- 公演データ（Instagramの告知投稿より） ----
 const shows = [
@@ -483,6 +504,21 @@ mb.onclick=()=>{nav.classList.toggle('open');mb.textContent=nav.classList.contai
 nav.querySelectorAll('a').forEach(a=>a.onclick=()=>{nav.classList.remove('open');mb.textContent='MENU'});
 
 renderShows();
+
+// ---- gallery + lightbox ----
+(function(){
+  const g=document.getElementById('gallery'), lb=document.getElementById('lightbox'), im=document.getElementById('lbImg');
+  let cur=0;
+  g.innerHTML=photos.map((p,i)=>`<button type="button" data-i="${i}" aria-label="写真を拡大：${esc(p.alt)}"><img src="${p.src}" alt="${esc(p.alt)}" style="object-position:${p.pos||'50% 50%'}"></button>`).join('');
+  const show=i=>{cur=(i+photos.length)%photos.length;im.src=photos[cur].src;im.alt=photos[cur].alt};
+  g.querySelectorAll('button').forEach(b=>b.onclick=()=>{show(+b.dataset.i);lb.classList.add('open');document.body.style.overflow='hidden'});
+  const close=()=>{lb.classList.remove('open');document.body.style.overflow=''};
+  document.getElementById('lbClose').onclick=close;
+  document.getElementById('lbPrev').onclick=e=>{e.stopPropagation();show(cur-1)};
+  document.getElementById('lbNext').onclick=e=>{e.stopPropagation();show(cur+1)};
+  lb.addEventListener('click',e=>{if(e.target===lb)close()});
+  document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')show(cur-1);if(e.key==='ArrowRight')show(cur+1)});
+})();
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal:not(.in)').forEach(el=>io.observe(el));
 </script>
