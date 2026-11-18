@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ハンドルマリー Official Site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0808;
+  --bg2:#120d0d;
+  --line:#2a1f1f;
+  --text:#ece6e3;
+  --muted:#8f8480;
+  --red:#e3261c;
+  --red-dk:#8c120c;
+  --en:'Anton',sans-serif;
+  --jp:'Zen Kaku Gothic New',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--jp);line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+
+/* grain */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:18px 4vw;transition:background .3s, padding .3s}
+header.scrolled{background:rgba(10,8,8,.88);backdrop-filter:blur(8px);padding:12px 4vw;border-bottom:1px solid var(--line)}
+header .logo img{height:30px;width:auto}
+nav{display:flex;gap:28px}
+nav a{font-family:var(--en);letter-spacing:.12em;font-size:15px;position:relative}
+nav a::after{content:"";position:absolute;left:0;bottom:-4px;height:2px;width:0;background:var(--red);transition:width .25s}
+nav a:hover::after{width:100%}
+.menu-btn{display:none;background:none;border:0;color:var(--text);font-family:var(--en);letter-spacing:.15em;font-size:15px;cursor:pointer}
+
+/* hero */
+.hero{position:relative;height:100svh;min-height:560px;overflow:hidden;display:flex;align-items:flex-end}
+.hero .bg{position:absolute;inset:0;background:url(img/hero.jpg) center 35%/cover no-repeat;transform:scale(1.06);animation:slowzoom 18s ease-out forwards}
+@keyframes slowzoom{to{transform:scale(1)}}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(10,8,8,.35) 0%,rgba(10,8,8,.15) 40%,rgba(10,8,8,.92) 100%)}
+.hero-inner{position:relative;z-index:2;width:100%;padding:0 4vw 9vh}
+.hero-logo{width:min(760px,88vw);filter:drop-shadow(0 6px 30px rgba(0,0,0,.6));opacity:0;animation:fadeup 1.2s .3s ease-out forwards}
+.hero-sub{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;font-family:var(--en);letter-spacing:.25em;font-size:14px;color:#f3d6d3;opacity:0;animation:fadeup 1.2s .7s ease-out forwards}
+.hero-sub .dot{width:6px;height:6px;background:var(--red);border-radius:50%}
+.next-live{display:inline-flex;align-items:center;gap:14px;margin-top:30px;padding:14px 22px;border:1px solid rgba(255,255,255,.35);background:rgba(10,8,8,.45);backdrop-filter:blur(4px);font-size:14px;opacity:0;animation:fadeup 1.2s 1s ease-out forwards;transition:border-color .2s,background .2s}
+.next-live:hover{border-color:var(--red);background:rgba(227,38,28,.18)}
+.next-live b{white-space:nowrap;font-family:var(--en);letter-spacing:.15em;color:var(--red);font-weight:400}
+@keyframes fadeup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.scroll-cue{display:none;writing-mode:vertical-rl;font-family:var(--en);letter-spacing:.3em;font-size:12px;color:var(--muted)}
+.scroll-cue::after{content:"";display:block;width:1px;height:60px;margin:12px auto 0;background:linear-gradient(var(--red),transparent);animation:cue 2s infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* sections */
+section{padding:120px 4vw}
+.sec-head{display:flex;align-items:baseline;gap:20px;margin-bottom:56px}
+.sec-head h2{font-family:var(--en);font-weight:400;font-size:clamp(56px,9vw,120px);line-height:.9;letter-spacing:.02em}
+.sec-head span{font-size:13px;color:var(--muted);letter-spacing:.2em}
+.sec-head::after{content:"";flex:1;height:1px;background:var(--line);align-self:center}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .9s ease,transform .9s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* live */
+.live-list{border-top:1px solid var(--line)}
+.show{display:grid;grid-template-columns:150px 1fr auto;gap:28px;align-items:center;padding:30px 0;border-bottom:1px solid var(--line);transition:background .25s}
+.show:hover{background:linear-gradient(90deg,rgba(227,38,28,.08),transparent 70%)}
+.date{font-family:var(--en);line-height:1}
+.date .md{font-size:48px;letter-spacing:.02em}
+.date .y{font-size:13px;color:var(--muted);letter-spacing:.2em;margin-top:6px}
+.date .wd{font-size:14px;color:var(--red);letter-spacing:.2em}
+.info h3{font-size:20px;font-weight:700;line-height:1.5}
+.info .sub{font-size:14px;color:#d9cdca;margin-top:2px}
+.info .venue{font-size:15px;margin-top:6px;font-weight:500}
+.info .meta{font-size:13px;color:var(--muted);margin-top:6px}
+.side{text-align:right;min-width:190px}
+.remain{font-size:12px;color:var(--muted);margin-bottom:10px;letter-spacing:.05em}
+.remain .bar{height:3px;background:var(--line);margin-top:6px;position:relative;overflow:hidden}
+.remain .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--red)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border:1px solid var(--red);background:var(--red);color:#fff;font-family:var(--jp);font-weight:700;font-size:14px;letter-spacing:.08em;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:transparent;color:var(--red)}
+.btn.ghost{background:transparent;color:var(--text);border-color:#4a3a38}
+.btn.ghost:hover{border-color:var(--red);color:var(--red)}
+.tag{display:inline-block;font-family:var(--en);letter-spacing:.15em;font-size:11px;padding:2px 8px;border:1px solid var(--red);color:var(--red);margin-bottom:8px}
+.tag.full{border-color:#6b5c59;color:#a89995}
+.note{margin-top:20px;font-size:12px;color:var(--muted)}
+
+/* reserve modal */
+.modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.75);backdrop-filter:blur(6px)}
+.modal.open{display:flex;animation:fade .25s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.sheet{width:min(560px,100%);max-height:92vh;overflow:auto;background:var(--bg2);border:1px solid var(--line);border-top:3px solid var(--red);padding:36px 32px 30px;position:relative}
+.sheet h3{font-family:var(--en);font-weight:400;font-size:34px;letter-spacing:.06em;line-height:1}
+.sheet .show-label{margin:12px 0 22px;font-size:14px;color:var(--muted);padding-bottom:18px;border-bottom:1px solid var(--line)}
+.close{position:absolute;top:14px;right:16px;background:none;border:0;color:var(--muted);font-size:26px;cursor:pointer;line-height:1}
+.close:hover{color:var(--text)}
+label{display:block;font-size:13px;color:#c9bdb9;margin:16px 0 6px;letter-spacing:.05em}
+label em{color:var(--red);font-style:normal;margin-left:4px}
+input,select,textarea{width:100%;background:#0a0808;border:1px solid #3a2d2b;color:var(--text);font:inherit;font-size:15px;padding:12px 14px;outline:none;transition:border-color .2s;border-radius:0}
+input:focus,select:focus,textarea:focus{border-color:var(--red)}
+textarea{min-height:130px;resize:vertical}
+.qty-row{display:flex;align-items:center;gap:0}
+.qty-row #qv{min-width:64px;text-align:center;font-family:var(--en);font-size:24px;border-top:1px solid #3a2d2b;border-bottom:1px solid #3a2d2b;line-height:46px}
+.qbtn{width:48px;height:48px;background:#0a0808;border:1px solid #3a2d2b;color:var(--text);font-size:20px;cursor:pointer;transition:all .15s}
+.qbtn:hover{border-color:var(--red);color:var(--red)}
+.qunit{margin-left:12px;color:var(--muted);font-size:14px}
+.qty button{flex:1;padding:12px 0;background:#0a0808;border:1px solid #3a2d2b;color:var(--text);font-family:var(--en);font-size:18px;cursor:pointer;transition:all .15s}
+.qty button.on{background:var(--red);border-color:var(--red);color:#fff}
+.form-actions{margin-top:26px;display:flex;justify-content:flex-end}
+.err{color:#ff7a70;font-size:13px;margin-top:10px;min-height:1em}
+.result{text-align:center;padding:10px 0}
+.result .big{font-family:var(--en);font-size:44px;letter-spacing:.05em;line-height:1;margin:6px 0 16px}
+.result.ok .big{color:var(--red)}
+.result.wait .big{color:#e8b44a}
+.result p{font-size:14px;color:#cfc3bf}
+.result .demo{margin-top:16px;font-size:11px;color:var(--muted)}
+
+/* photo band */
+.band{padding:0;display:grid;grid-template-columns:1.6fr 1fr;grid-template-rows:1fr 1fr;gap:6px;height:min(80vw,720px)}
+.band figure{overflow:hidden;position:relative}
+.band figure:first-child{grid-row:1/3}
+.band img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s ease,filter .6s}
+.band figure:hover img{transform:scale(1.04)}
+.band img.mono{filter:grayscale(1) contrast(1.1)}
+.band figure:hover img.mono{filter:none}
+
+/* member */
+.member-wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:6vw;align-items:center}
+.member-photo{position:relative}
+.member-photo img{width:100%;aspect-ratio:2/3;object-fit:cover}
+.member-photo::before{content:"";position:absolute;inset:18px -18px -18px 18px;border:1px solid var(--red);z-index:-1}
+.bio{font-size:15px;color:#cfc3bf;margin-bottom:40px}
+.members{display:grid;gap:0;border-top:1px solid var(--line)}
+.m{display:grid;grid-template-columns:110px 1fr;align-items:center;padding:24px 0;border-bottom:1px solid var(--line)}
+.m .part{font-family:var(--en);font-size:22px;letter-spacing:.08em;color:var(--red)}
+.m .name{font-size:22px;font-weight:700}
+.m .name small{display:block;font-size:12px;color:var(--muted);font-weight:400;letter-spacing:.1em}
+
+.members-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.mcard .ph{overflow:hidden;aspect-ratio:4/5;position:relative;background:#111}
+.mcard .ph img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08);transition:filter .6s,transform 1s}
+.mcard:hover .ph img{filter:none;transform:scale(1.03)}
+.mcard .ph::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--red);transition:width .4s}
+.mcard:hover .ph::after{width:100%}
+.mcard figcaption{display:flex;align-items:baseline;gap:16px;padding:18px 2px 0;border-bottom:1px solid var(--line);padding-bottom:16px}
+.mcard .part{font-family:var(--en);font-size:20px;letter-spacing:.08em;color:var(--red);min-width:58px}
+.mcard .name{font-size:20px;font-weight:700}
+
+/* music */
+.music{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.music-grid{display:grid;grid-template-columns:minmax(260px,420px) 1fr;gap:5vw;align-items:start}
+.jacket{aspect-ratio:1;background:url(img/main.jpg) center/cover;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.jacket::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 62%,rgba(10,8,8,.75) 100%)}
+.jacket img{position:absolute;left:6%;bottom:6%;width:46%;z-index:2}
+.release .kind{font-family:var(--en);letter-spacing:.2em;color:var(--red);font-size:14px}
+.release h3{font-size:30px;font-weight:900;margin:4px 0 22px}
+.tracks{list-style:none;border-top:1px solid var(--line)}
+.tracks li{display:grid;grid-template-columns:40px 1fr auto;align-items:center;padding:14px 4px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .2s}
+.tracks li:hover{background:rgba(255,255,255,.03)}
+.tracks .no{font-family:var(--en);color:var(--muted)}
+.tracks .t{font-weight:500}
+.tracks .len{font-family:var(--en);color:var(--muted);font-size:14px;letter-spacing:.05em}
+.tracks li.playing .t{color:var(--red)}
+.tracks li.playing .no{color:var(--red)}
+.player{display:flex;align-items:center;gap:16px;margin-top:22px;padding:16px 18px;border:1px solid var(--line);background:#0a0808}
+.pbtn{width:44px;height:44px;border-radius:50%;border:0;background:var(--red);color:#fff;cursor:pointer;display:grid;place-items:center;flex:none}
+.pbtn svg{width:16px;height:16px}
+.ptrack{flex:1;min-width:0}
+.ptrack .now{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog{height:3px;background:var(--line);margin-top:8px;position:relative}
+.prog i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--red)}
+.stream{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.soon{align-self:center}
+.soon-big{font-family:var(--en);font-size:clamp(64px,9vw,128px);line-height:.92;letter-spacing:.02em;margin:10px 0 22px;
+  color:transparent;-webkit-text-stroke:1.5px var(--text);position:relative}
+.soon-big::after{content:"";display:inline-block;width:.18em;height:.18em;background:var(--red);border-radius:50%;margin-left:.12em;animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.15}}
+.soon p{font-size:15px;color:#cfc3bf}
+
+/* sns */
+.sns-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.sns-grid a{background:var(--bg);padding:38px 24px;display:flex;flex-direction:column;gap:14px;transition:background .25s}
+.sns-grid a:hover{background:#1a0f0e}
+.sns-grid svg{width:28px;height:28px;fill:var(--text);transition:fill .25s}
+.sns-grid a:hover svg{fill:var(--red)}
+.sns-grid b{font-family:var(--en);font-weight:400;font-size:22px;letter-spacing:.08em}
+.sns-grid small{color:var(--muted);font-size:12px}
+
+/* contact */
+.contact-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:6vw}
+.contact-wrap .lead{font-size:15px;color:#cfc3bf}
+.contact-wrap .lead p+p{margin-top:14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dm{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;align-content:flex-start}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.btn:disabled{opacity:.6;cursor:wait}
+
+footer{padding:70px 4vw 40px;border-top:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:18px}
+footer img{width:220px;opacity:.9}
+footer small{color:var(--muted);font-family:var(--en);letter-spacing:.2em;font-size:11px}
+
+@media (max-width:860px){
+  .hero .bg{background-position:33% 35%}
+  .hero-sub{gap:8px 18px}
+  .hero-sub .dot{display:none}
+  .hero-logo{width:100%}
+  .members-grid{grid-template-columns:1fr;gap:34px}
+  .mcard .ph img{filter:none}
+  nav{position:fixed;inset:0;background:rgba(10,8,8,.97);flex-direction:column;align-items:center;justify-content:center;gap:34px;display:none}
+  nav.open{display:flex}
+  nav a{font-size:30px}
+  .menu-btn{display:block;position:relative;z-index:60}
+  section{padding:90px 5vw}
+  .show{grid-template-columns:1fr;gap:12px}
+  .date{display:flex;align-items:baseline;gap:12px}
+  .date .md{font-size:40px}
+  .side{text-align:left;min-width:0}
+  .band{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;height:auto}
+  .band figure:first-child{grid-column:1/3;grid-row:auto}
+  .band figure{aspect-ratio:4/3}
+  .band figure:first-child{aspect-ratio:3/2}
+  .member-wrap,.music-grid,.contact-wrap{grid-template-columns:minmax(0,1fr)}
+  .jacket{max-width:420px}
+  .member-photo{max-width:420px}
+  .sns-grid{grid-template-columns:1fr}
+  .row2{grid-template-columns:1fr}
+  .scroll-cue{display:none}
+  .sheet{padding:30px 22px 24px}
+}
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <a href="#top" class="logo" aria-label="ハンドルマリー トップ"><img src="img/logo.png" alt="ハンドルマリー"></a>
+  <button class="menu-btn" id="menuBtn" aria-label="メニュー">MENU</button>
+  <nav id="nav">
+    <a href="#live">LIVE</a>
+    <a href="#member">MEMBER</a>
+    <a href="#music">MUSIC</a>
+    <a href="#sns">SNS</a>
+    <a href="#contact">CONTACT</a>
+  </nav>
+</header>
+
+<div class="hero" id="top">
+  <div class="bg" role="img" aria-label="手を挙げるギタリストのシルエットのライブ写真"></div>
+  <div class="hero-inner">
+    <h1><img class="hero-logo" src="img/logo.png" alt="ハンドルマリー"></h1>
+    <div class="hero-sub"><span style="font-family:var(--jp);font-weight:700;letter-spacing:.2em">焦燥的なロックバンド</span><i class="dot"></i><span>3 PIECE ROCK BAND</span></div>
+    <a href="#live" class="next-live" id="nextLive"><b>NEXT LIVE</b><span id="nextLiveText"></span><span>→</span></a>
+  </div>
+</div>
+
+<section id="live">
+  <div class="sec-head reveal"><h2>LIVE</h2><span>ライブ日程</span></div>
+  <div class="live-list" id="liveList"></div>
+  <p class="note reveal">※ 取り置きはこのフォームのほか、Instagram / X のDM（バンド・メンバーどちらでも）でも受け付けています。<br>※ 当日は受付で「ハンドルマリー」とお名前をお伝えください。</p>
+</section>
+
+<div class="band section reveal">
+  <figure><img src="img/drum.jpg" alt="ステージ上のドラム視点のライブ写真"></figure>
+  <figure><img class="mono" src="img/walk.jpg" alt="メンバー3人のオフショット"></figure>
+  <figure><img src="img/stage.jpg" alt="FM GUNMA ROCKERSのステージ写真"></figure>
+</div>
+
+<section id="member">
+  <div class="sec-head reveal"><h2>MEMBER</h2><span>メンバー</span></div>
+  <div class="member-wrap">
+    <div class="member-photo reveal"><img src="img/artist.jpg" alt="ハンドルマリーのアーティスト写真"></div>
+    <div class="reveal">
+      <div class="members">
+        <div class="m"><div class="part">GT.VO</div><div class="name">イリサワオースケ<small>GUITAR / VOCAL</small></div></div>
+        <div class="m"><div class="part">BA</div><div class="name">カワサキシン<small>BASS</small></div></div>
+        <div class="m"><div class="part">DR</div><div class="name">オカモトナル<small>DRUMS</small></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="music" class="music">
+  <div class="sec-head reveal"><h2>MUSIC</h2><span>音源</span></div>
+  <div class="music-grid">
+    <div class="jacket reveal" role="img" aria-label="ハンドルマリーのメンバー3人"><img src="img/logo.png" alt=""></div>
+    <div class="release reveal soon">
+      <div class="kind">NEW RELEASE</div>
+      <div class="soon-big">COMING<br>SOON</div>
+      <p>音源の配信は準備中です。<br>リリース情報はInstagram / X でお知らせします。</p>
+      <div class="stream">
+        <a class="btn ghost" href="https://www.instagram.com/handle_marie/" target="_blank" rel="noopener">Instagram →</a>
+        <a class="btn ghost" href="https://x.com/handle_marie" target="_blank" rel="noopener">X →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sns">
+  <div class="sec-head reveal"><h2>SNS</h2><span>最新情報はこちら</span></div>
+  <div class="sns-grid reveal">
+    <a href="https://www.instagram.com/handle_marie/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.9 1.4 1.4 0 0 0 0-2.9z"/></svg><b>INSTAGRAM</b><small>@handle_marie　ライブ情報・セットリスト</small></a>
+    <a href="https://x.com/handle_marie" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M18.9 2H22l-7.3 8.3L23 22h-6.6l-5.2-6.8L5.3 22H2.2l7.8-8.9L1.5 2h6.8l4.7 6.2zm-1.1 18h1.7L7.3 3.9H5.5z"/></svg><b>X</b><small>@handle_marie　最新情報</small></a>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="sec-head reveal"><h2>CONTACT</h2><span>お問い合わせ</span></div>
+  <div class="contact-wrap">
+    <div class="lead reveal">
+      <p>ライブ出演のご依頼、取材、その他のお問い合わせは、Instagram または X のDMからお気軽にどうぞ。</p>
+      <p>内容を確認のうえ、メンバーからご連絡します。</p>
+    </div>
+    <div class="dm reveal">
+      <a class="btn" href="https://www.instagram.com/handle_marie/" target="_blank" rel="noopener">Instagram でDMする →</a>
+      <a class="btn ghost" href="https://x.com/handle_marie" target="_blank" rel="noopener">X でDMする →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <img src="img/logo.png" alt="ハンドルマリー">
+  <small>© ハンドルマリー ALL RIGHTS RESERVED.</small>
+</footer>
+
+<!-- reserve modal -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+// ---- 予約の送信先（Google Apps Script のウェブアプリURL）。空のままだと試作モード ----
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxIElwuIacuEuW-g95KdE9pstllY3z6MWA3h3QEnv92kUTRWozKrIla8yx8LuO7d1Lp/exec';
+
+// ---- 公演データ（Instagramの告知投稿より） ----
+const shows = [
+  {id:'s1', date:'2026-11-21', title:'Maebashi DYVER presents', sub:'', venue:'前橋DYVER', open:'17:00', start:'17:30', price:'取り置き ¥2,000+1D / 当日 ¥2,500+1D'},
+  {id:'s2', date:'2026-12-19', title:'the Groove 4th Anniversary Day8', sub:'店長極選バンド！大集合の巻！マジやべぇのばっかりの宴', venue:'the Groove TAKASAKI', open:'16:00', start:'16:30', price:'¥2,200+1D'},
+  {id:'s3', date:'2026-12-30', title:'FRONT BRIDGE SUPLEX2026', sub:'Maebashi DYVER presents', venue:'前橋DYVER', open:'14:00', start:'14:30', price:'取り置き ¥2,000+1D / 当日 ¥3,000+1D'},
+];
+const WD = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function parts(d){const x=new Date(d+'T00:00:00');return {y:x.getFullYear(),md:(x.getMonth()+1)+'.'+String(x.getDate()).padStart(2,'0'),wd:WD[x.getDay()]}}
+// 終わった公演は自動で非表示
+const today = new Date(); today.setHours(0,0,0,0);
+const upcoming = shows.filter(s=>new Date(s.date+'T00:00:00')>=today);
+
+function renderShows(){
+  const el = document.getElementById('liveList');
+  if(!upcoming.length){el.innerHTML='<p style="padding:30px 0;color:var(--muted)">次のライブは決まり次第お知らせします。</p>';document.getElementById('nextLive').style.display='none';return}
+  el.innerHTML = upcoming.map(s=>{
+    const p = parts(s.date);
+    return `<div class="show reveal in">
+      <div class="date"><div class="y">${p.y}</div><div class="md">${p.md}</div><div class="wd">${p.wd}</div></div>
+      <div class="info">
+        <span class="tag">取り置き受付中</span>
+        <h3>${esc(s.title)}</h3>
+        ${s.sub?`<div class="sub">${esc(s.sub)}</div>`:''}
+        <div class="venue">@ ${esc(s.venue)}</div>
+        <div class="meta">OPEN ${s.open} / START ${s.start}　${esc(s.price)}</div>
+      </div>
+      <div class="side">
+        <button class="btn" data-show="${s.id}">取り置き予約する →</button>
+      </div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('[data-show]').forEach(b=>b.addEventListener('click',()=>openReserve(b.dataset.show)));
+  const n = upcoming[0], p = parts(n.date);
+  document.getElementById('nextLiveText').textContent = `${p.md} ${p.wd}　${n.venue}`;
+}
+
+// ---- 取り置き予約 ----
+const modal = document.getElementById('modal'), sheet = document.getElementById('sheet');
+let qty = 1;
+function openReserve(id){
+  const s = shows.find(x=>x.id===id), p = parts(s.date);
+  qty = 1;
+  sheet.innerHTML = `
+    <button class="close" aria-label="閉じる">×</button>
+    <h3 id="mTitle">RESERVE</h3>
+    <div class="show-label">${p.y}.${p.md} ${p.wd}　${esc(s.title)}<br>@ ${esc(s.venue)}　/　${esc(s.price)}</div>
+    <form id="rForm" novalidate>
+      <label>お名前（当日受付でお伝えください）<em>*</em></label>
+      <input name="name" autocomplete="name" required>
+      <label>メールアドレス（任意）</label>
+      <input name="email" type="email" autocomplete="email" placeholder="入力すると確認メールが届きます">
+      <label>枚数<em>*</em></label>
+      <div class="qty-row"><button type="button" class="qbtn" data-d="-1" aria-label="減らす">−</button><span id="qv">1</span><button type="button" class="qbtn" data-d="1" aria-label="増やす">＋</button><span class="qunit">枚</span></div>
+      <label>メッセージ（任意）</label>
+      <input name="msg" placeholder="一緒に来る方のお名前など">
+      <div class="hp" aria-hidden="true"><label>website</label><input name="website" tabindex="-1" autocomplete="off"></div>
+      <div class="err" id="rErr"></div>
+      <div class="form-actions"><button class="btn" type="submit">予約する →</button></div>
+    </form>`;
+  sheet.querySelector('.close').onclick = closeModal;
+  sheet.querySelectorAll('.qbtn').forEach(b=>b.onclick=()=>{qty=Math.max(1,qty+ +b.dataset.d);sheet.querySelector('#qv').textContent=qty});
+  sheet.querySelector('#rForm').addEventListener('submit',e=>{e.preventDefault();submitReserve(s,e.target)});
+  modal.classList.add('open'); document.body.style.overflow='hidden';
+  setTimeout(()=>sheet.querySelector('input').focus(),50);
+}
+function closeModal(){modal.classList.remove('open');document.body.style.overflow=''}
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+async function submitReserve(s, f){
+  const name=f.name.value.trim(), email=f.email.value.trim(), msg=f.msg.value.trim(), err=f.querySelector('#rErr');
+  err.textContent='';
+  if(!name){err.textContent='お名前を入力してください。';return}
+  if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='メールアドレスの形式を確認してください（空欄でも予約できます）。';return}
+  const p = parts(s.date);
+  const btn = f.querySelector('button[type=submit]');
+  let demo = !ENDPOINT;
+  if(!demo){
+    btn.disabled = true; btn.textContent = '送信中…';
+    try{
+      const body = new URLSearchParams({date:s.date, title:s.title + (s.sub?' / '+s.sub:''), venue:s.venue, name, qty:String(qty), email, msg, website:f.website.value});
+      const res = await fetch(ENDPOINT, {method:'POST', body});
+      const j = await res.json();
+      if(!j.ok) throw new Error(j.error||'error');
+    }catch(e){
+      btn.disabled = false; btn.textContent = '予約する →';
+      err.innerHTML = 'うまく送信できませんでした。時間をおいてもう一度試すか、<a href="https://www.instagram.com/handle_marie/" target="_blank" rel="noopener" style="text-decoration:underline">Instagram</a> / <a href="https://x.com/handle_marie" target="_blank" rel="noopener" style="text-decoration:underline">X</a> のDMでご連絡ください。';
+      return;
+    }
+  }
+  sheet.innerHTML = `<button class="close" aria-label="閉じる">×</button>
+    <div class="result ok"><div class="tag">RESERVED</div><div class="big">THANK YOU!</div>
+      <p>${esc(name)} 様、${p.md} ${esc(s.venue)} の取り置きを${qty}枚で受け付けました。<br>当日は受付で「ハンドルマリーの取り置き」とお名前をお伝えください。</p>
+      ${email?'<p class="demo">確認メールを送りました。届かない場合は迷惑メールフォルダもご確認ください。</p>':''}
+      ${demo?'<p class="demo">※ 試作モードのため、実際には予約は送信されていません。</p>':''}
+      <div class="form-actions" style="justify-content:center"><button class="btn ghost" id="okBtn">閉じる</button></div></div>`;
+  sheet.querySelector('.close').onclick = closeModal;
+  sheet.querySelector('#okBtn').onclick = closeModal;
+}
+
+// ---- header / menu / reveal ----
+const hdr=document.getElementById('hdr');
+addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>40),{passive:true});
+const nav=document.getElementById('nav'), mb=document.getElementById('menuBtn');
+mb.onclick=()=>{nav.classList.toggle('open');mb.textContent=nav.classList.contains('open')?'CLOSE':'MENU'};
+nav.querySelectorAll('a').forEach(a=>a.onclick=()=>{nav.classList.remove('open');mb.textContent='MENU'});
+
+renderShows();
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal:not(.in)').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
