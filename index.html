@@ -42,11 +42,11 @@ nav a:hover::after{width:100%}
 
 /* hero */
 .hero{position:relative;height:100svh;min-height:560px;overflow:hidden;display:flex;align-items:flex-end}
-.hero .bg{position:absolute;inset:0;background:url(img/hero.jpg) center 35%/cover no-repeat;transform:scale(1.06);animation:slowzoom 18s ease-out forwards}
+.hero .bg{position:absolute;inset:0;background:url(img/hero2.jpg) center 40%/cover no-repeat;transform:scale(1.06);animation:slowzoom 18s ease-out forwards}
 @keyframes slowzoom{to{transform:scale(1)}}
-.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(10,8,8,.35) 0%,rgba(10,8,8,.15) 40%,rgba(10,8,8,.92) 100%)}
-.hero-inner{position:relative;z-index:2;width:100%;padding:0 4vw 9vh}
-.hero-logo{width:min(760px,88vw);filter:drop-shadow(0 6px 30px rgba(0,0,0,.6));opacity:0;animation:fadeup 1.2s .3s ease-out forwards}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(10,8,8,.4) 0%,rgba(10,8,8,.1) 35%,rgba(10,8,8,.55) 62%,rgba(10,8,8,.95) 100%)}
+.hero-inner{position:relative;z-index:2;width:100%;padding:0 4vw 8vh 31vw}
+.hero-logo{width:min(600px,42vw);filter:drop-shadow(0 6px 30px rgba(0,0,0,.6));opacity:0;animation:fadeup 1.2s .3s ease-out forwards}
 .hero-sub{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;font-family:var(--en);letter-spacing:.25em;font-size:14px;color:#f3d6d3;opacity:0;animation:fadeup 1.2s .7s ease-out forwards}
 .hero-sub .dot{width:6px;height:6px;background:var(--red);border-radius:50%}
 .next-live{display:inline-flex;align-items:center;gap:14px;margin-top:30px;padding:14px 22px;border:1px solid rgba(255,255,255,.35);background:rgba(10,8,8,.45);backdrop-filter:blur(4px);font-size:14px;opacity:0;animation:fadeup 1.2s 1s ease-out forwards;transition:border-color .2s,background .2s}
@@ -210,7 +210,9 @@ footer img{width:220px;opacity:.9}
 footer small{color:var(--muted);font-family:var(--en);letter-spacing:.2em;font-size:11px}
 
 @media (max-width:860px){
-  .hero .bg{background-position:33% 35%}
+  .hero .bg{background-position:86% 40%}
+  .hero-inner{padding:0 5vw 9vh}
+  .hero-logo{width:88vw}
   .hero-sub{gap:8px 18px}
   .hero-sub .dot{display:none}
   .hero-logo{width:100%}
@@ -254,7 +256,7 @@ footer small{color:var(--muted);font-family:var(--en);letter-spacing:.2em;font-s
 </header>
 
 <div class="hero" id="top">
-  <div class="bg" role="img" aria-label="手を挙げるギタリストのシルエットのライブ写真"></div>
+  <div class="bg" role="img" aria-label="赤い照明のステージで演奏するハンドルマリーのライブ写真"></div>
   <div class="hero-inner">
     <h1><img class="hero-logo" src="img/logo.png" alt="ハンドルマリー"></h1>
     <div class="hero-sub"><span style="font-family:var(--jp);font-weight:700;letter-spacing:.2em">焦燥的なロックバンド</span><i class="dot"></i><span>3 PIECE ROCK BAND</span></div>
