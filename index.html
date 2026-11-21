@@ -90,6 +90,18 @@ section{padding:120px 4vw}
 .tag.full{border-color:#6b5c59;color:#a89995}
 .note{margin-top:20px;font-size:12px;color:var(--muted)}
 
+.tag.today{background:var(--red);color:#fff}
+.btn.closed{background:transparent;color:var(--muted);border-color:#3a2d2b;cursor:default}
+.btn.closed:hover{color:var(--muted)}
+.past{margin-top:56px}
+.past-head{font-family:var(--en);font-weight:400;font-size:26px;letter-spacing:.12em;color:#cfc3bf;display:flex;align-items:baseline;gap:14px}
+.past-head span{font-family:var(--jp);font-size:12px;color:var(--muted);letter-spacing:.2em}
+.past-list{list-style:none;margin-top:14px;border-top:1px solid var(--line)}
+.past-list li{display:grid;grid-template-columns:150px 1fr;gap:28px;padding:14px 0;border-bottom:1px solid var(--line);color:var(--muted);font-size:14px}
+.past-list .pd{font-family:var(--en);letter-spacing:.08em;font-size:16px}
+.past-list b{color:#cfc3bf;font-weight:500}
+@media (max-width:860px){.past-list li{grid-template-columns:1fr;gap:2px}}
+
 /* reserve modal */
 .modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.75);backdrop-filter:blur(6px)}
 .modal.open{display:flex;animation:fade .25s ease}
@@ -272,6 +284,10 @@ footer small{color:var(--muted);font-family:var(--en);letter-spacing:.2em;font-s
 <section id="live">
   <div class="sec-head reveal"><h2>LIVE</h2><span>ライブ日程</span></div>
   <div class="live-list" id="liveList"></div>
+  <div class="past" id="pastWrap" hidden>
+    <h3 class="past-head">PAST LIVE <span>これまでのライブ</span></h3>
+    <ul class="past-list" id="pastList"></ul>
+  </div>
   <p class="note reveal">※ 取り置きはこのフォームのほか、Instagram / X のDM（バンド・メンバーどちらでも）でも受け付けています。<br>※ 当日は受付で「ハンドルマリー」とお名前をお伝えください。</p>
 </section>
 
@@ -384,32 +400,49 @@ const WD = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function parts(d){const x=new Date(d+'T00:00:00');return {y:x.getFullYear(),md:(x.getMonth()+1)+'.'+String(x.getDate()).padStart(2,'0'),wd:WD[x.getDay()]}}
-// 終わった公演は自動で非表示
-const today = new Date(); today.setHours(0,0,0,0);
-const upcoming = shows.filter(s=>new Date(s.date+'T00:00:00')>=today);
+// 公演の状態：開演時刻を過ぎたら「受付終了」、翌日になったら「PAST LIVE」へ自動で移動
+const now = new Date();
+const today = new Date(now); today.setHours(0,0,0,0);
+const startAt = s => new Date(s.date+'T'+s.start+':00');
+const isPast = s => new Date(s.date+'T00:00:00') < today;
+const isToday = s => new Date(s.date+'T00:00:00').getTime() === today.getTime();
+const isClosed = s => now >= startAt(s);          // 開演後は取り置き受付終了
+const upcoming = shows.filter(s=>!isPast(s));
+const past = shows.filter(isPast).sort((a,b)=>a.date<b.date?1:-1);
 
 function renderShows(){
   const el = document.getElementById('liveList');
-  if(!upcoming.length){el.innerHTML='<p style="padding:30px 0;color:var(--muted)">次のライブは決まり次第お知らせします。</p>';document.getElementById('nextLive').style.display='none';return}
-  el.innerHTML = upcoming.map(s=>{
-    const p = parts(s.date);
-    return `<div class="show reveal in">
-      <div class="date"><div class="y">${p.y}</div><div class="md">${p.md}</div><div class="wd">${p.wd}</div></div>
-      <div class="info">
-        <span class="tag">取り置き受付中</span>
-        <h3>${esc(s.title)}</h3>
-        ${s.sub?`<div class="sub">${esc(s.sub)}</div>`:''}
-        <div class="venue">@ ${esc(s.venue)}</div>
-        <div class="meta">OPEN ${s.open} / START ${s.start}　${esc(s.price)}</div>
-      </div>
-      <div class="side">
-        <button class="btn" data-show="${s.id}">取り置き予約する →</button>
-      </div>
-    </div>`;
-  }).join('');
-  el.querySelectorAll('[data-show]').forEach(b=>b.addEventListener('click',()=>openReserve(b.dataset.show)));
-  const n = upcoming[0], p = parts(n.date);
-  document.getElementById('nextLiveText').textContent = `${p.md} ${p.wd}　${n.venue}`;
+  if(!upcoming.length){
+    el.innerHTML='<p style="padding:30px 0;color:var(--muted)">次のライブは決まり次第、Instagram / X とこのページでお知らせします。</p>';
+  }else{
+    el.innerHTML = upcoming.map(s=>{
+      const p = parts(s.date), closed = isClosed(s), td = isToday(s);
+      const tag = td ? (closed ? '<span class="tag today">本日開催</span> <span class="tag full">取り置き受付終了</span>' : '<span class="tag today">本日開催</span> <span class="tag">取り置き受付中</span>') : '<span class="tag">取り置き受付中</span>';
+      const btn = closed ? '<button class="btn closed" disabled>受付終了</button>' : `<button class="btn" data-show="${s.id}">取り置き予約する →</button>`;
+      return `<div class="show reveal in">
+        <div class="date"><div class="y">${p.y}</div><div class="md">${p.md}</div><div class="wd">${p.wd}</div></div>
+        <div class="info">
+          ${tag}
+          <h3>${esc(s.title)}</h3>
+          ${s.sub?`<div class="sub">${esc(s.sub)}</div>`:''}
+          <div class="venue">@ ${esc(s.venue)}</div>
+          <div class="meta">OPEN ${s.open} / START ${s.start}　${esc(s.price)}</div>
+        </div>
+        <div class="side">${btn}</div>
+      </div>`;
+    }).join('');
+    el.querySelectorAll('[data-show]').forEach(b=>b.addEventListener('click',()=>openReserve(b.dataset.show)));
+  }
+  // NEXT LIVE：まだ始まっていない一番近い公演
+  const next = upcoming.find(s=>!isClosed(s));
+  const nl = document.getElementById('nextLive');
+  if(next){const p=parts(next.date); document.getElementById('nextLiveText').textContent=`${p.md} ${p.wd}　${next.venue}`; nl.style.display='';}
+  else nl.style.display='none';
+  // PAST LIVE（新しい順・最大6件）
+  if(past.length){
+    document.getElementById('pastWrap').hidden=false;
+    document.getElementById('pastList').innerHTML = past.slice(0,6).map(s=>{const p=parts(s.date);return `<li><span class="pd">${p.y}.${p.md} ${p.wd}</span><span><b>${esc(s.title)}</b>　@ ${esc(s.venue)}</span></li>`}).join('');
+  }
 }
 
 // ---- 取り置き予約 ----
