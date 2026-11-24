@@ -199,6 +199,10 @@ textarea{min-height:130px;resize:vertical}
 .sc-player{border:1px solid var(--line);background:#0a0808;padding:0;line-height:0}
 .sc-player iframe{display:block}
 .more-note{margin-top:18px;font-size:13px;color:var(--muted)}
+.demo-line{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.demo-line span{font-family:var(--en);letter-spacing:.15em;color:var(--red);margin-right:12px}
+.demo-line a{color:#cfc3bf;border-bottom:1px solid #4a3a38}
+.demo-line a:hover{color:var(--red);border-color:var(--red)}
 .soon-big{font-family:var(--en);font-size:clamp(64px,9vw,128px);line-height:.92;letter-spacing:.02em;margin:10px 0 22px;
   color:transparent;-webkit-text-stroke:1.5px var(--text);position:relative}
 .soon-big::after{content:"";display:inline-block;width:.18em;height:.18em;background:var(--red);border-radius:50%;margin-left:.12em;animation:blink 1.4s infinite}
@@ -319,18 +323,15 @@ footer small{color:var(--muted);font-family:var(--en);letter-spacing:.2em;font-s
   <div class="sec-head reveal"><h2>MUSIC</h2><span>音源</span></div>
   <div class="music-grid">
     <div class="jacket reveal" role="img" aria-label="ハンドルマリーのメンバー3人"><img src="img/logo.png" alt=""></div>
-    <div class="release reveal">
-      <div class="kind">LISTEN NOW</div>
-      <h3>インスタントシネマ</h3>
-      <div class="sc-player">
-        <iframe title="インスタントシネマ（SoundCloud）" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
-          src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/mello-729305192/6bgpj0dhmti3&amp;color=%23e3261c&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=false"></iframe>
-      </div>
+    <div class="release reveal soon">
+      <div class="kind">NEW RELEASE</div>
+      <div class="soon-big">COMING<br>SOON</div>
+      <p>音源は現在制作中です。<br>リリース情報はInstagram / X でお知らせします。</p>
       <div class="stream">
-        <a class="btn" href="https://soundcloud.com/mello-729305192" target="_blank" rel="noopener">SoundCloud で聴く →</a>
-        <a class="btn ghost" href="https://eggs.mu/artist/handle_marie" target="_blank" rel="noopener">Eggs で聴く →</a>
+        <a class="btn ghost" href="https://www.instagram.com/handle_marie/" target="_blank" rel="noopener">Instagram →</a>
+        <a class="btn ghost" href="https://x.com/handle_marie" target="_blank" rel="noopener">X →</a>
       </div>
-      <p class="more-note">Eggs では「最終兵器アナタ」も聴けます。新しい音源はInstagram / X でお知らせします。</p>
+      <p class="demo-line"><span>DEMO</span>ひと足先にデモ音源も聴けます：<a href="https://soundcloud.com/mello-729305192" target="_blank" rel="noopener">SoundCloud</a> / <a href="https://eggs.mu/artist/handle_marie" target="_blank" rel="noopener">Eggs</a></p>
     </div>
   </div>
 </section>
